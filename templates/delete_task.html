@@ -1,28 +1,70 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Удалить задачу</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <header class="py-3 mb-4 border-bottom bg-white shadow-sm">
-        <div class="container d-flex flex-wrap justify-content-between align-items-center">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none">
-                <span class="fs-3 fw-bold text-primary">ToDo</span>
-            </a>
+
+{% block title %}Удаление задачи{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card hover-lift animate-slide-up">
+            <div class="card-header bg-danger text-white">
+                <h1 class="h3 mb-0 fw-bold"><i class="bi bi-trash me-2"></i>Удаление задачи</h1>
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center mb-4 animate-fade-in">
+                    <div class="alert-icon mb-3">
+                        <i class="bi bi-exclamation-triangle-fill text-danger display-1"></i>
+                    </div>
+                    <h2 class="h4 mb-3">Вы уверены, что хотите удалить эту задачу?</h2>
+                    <div class="alert alert-warning p-3 mb-4">
+                        <p class="mb-2 fw-bold">{{ task.title }}</p>
+                        {% if task.description %}
+                            <p class="mb-0 small">{{ task.description }}</p>
+                        {% endif %}
+                    </div>
+                    <p class="text-danger small fst-italic">Это действие невозможно отменить.</p>
+                </div>
+                
+                <form method="post" class="animate-slide-up delay-200">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'todo_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-1"></i>Отмена
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>Удалить задачу
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </header>
-    <div class="container">
-        <h1>Удалить задачу</h1>
-        <p>Вы уверены, что хотите удалить задачу <strong>"{{ task.title }}"</strong>?</p>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn-custom" style="background:#ff5252;">Удалить</button>
-            <a href="{% url 'todo_list' %}" class="btn-secondary" style="margin-left:12px;">Отмена</a>
-        </form>
+        
+        <div class="card mt-4 hover-lift animate-slide-up delay-300">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+                    <p class="mb-0 small">Вместо удаления задачи вы можете отметить её как выполненную, чтобы сохранить историю ваших достижений.</p>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<style>
+    .alert-icon {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+{% endblock %}

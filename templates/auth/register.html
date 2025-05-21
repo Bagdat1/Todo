@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="container py-5 animate-fade-in">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="card hover-lift animate-slide-up shadow">
+                <div class="card-header p-4 bg-primary text-white text-center">
+                    <h2 class="h3 mb-0 fw-bold"><i class="bi bi-person-plus me-2"></i>Создание аккаунта</h2>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" class="animate-slide-up delay-100">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                            <div class="alert alert-danger mb-4" role="alert">
+                                <div class="d-flex">
+                                    <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
+                                    <div>
+                                        <h6 class="alert-heading">При регистрации возникли ошибки:</h6>
+                                        <ul class="mb-0 ps-3">
+                                            {% for field in form %}
+                                                {% for error in field.errors %}
+                                                    <li>{{ field.label }}: {{ error }}</li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {% for error in form.non_field_errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-4 form-group">
+                            <label for="username" class="form-label">Имя пользователя</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       value="{{ form.username.value|default:'' }}" required autofocus>
+                            </div>
+                            {% if form.username.help_text %}
+                                <div class="form-text small">{{ form.username.help_text }}</div>
+                            {% else %}
+                                <div class="form-text small">От 3 до 150 символов. Буквы, цифры и символы @/./+/-/_</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4 form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{{ form.email.value|default:'' }}" required>
+                            </div>
+                            <div class="form-text small">Ваш действующий email-адрес</div>
+                        </div>
+
+                        <div class="mb-4 form-group">
+                            <label for="password1" class="form-label">Пароль</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                <input type="password" class="form-control" id="password1" name="password1" required>
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="password1">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text small">
+                                <ul class="ps-3 mb-0">
+                                    <li>Минимум 8 символов</li>
+                                    <li>Не должен быть слишком простым</li>
+                                    <li>Не должен совпадать с личной информацией</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 form-group">
+                            <label for="password2" class="form-label">Подтверждение пароля</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                                <input type="password" class="form-control" id="password2" name="password2" required>
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="password2">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text small">Повторите пароль для подтверждения</div>
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            <input class="form-check-input" type="checkbox" id="agreement" required>
+                            <label class="form-check-label" for="agreement">
+                                Я соглашаюсь с <a href="#" class="text-decoration-none">условиями использования</a> и <a href="#" class="text-decoration-none">политикой конфиденциальности</a>
+                            </label>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary py-2 hover-lift">
+                                <i class="bi bi-person-plus me-2"></i>Зарегистрироваться
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center p-3 bg-light animate-slide-up delay-200">
+                    <p class="mb-0">
+                        Уже есть аккаунт? 
+                        <a href="{% url 'login' %}" class="text-decoration-none fw-semibold">
+                            Войти
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Добавляем анимацию при фокусе на полях формы
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.closest('.form-group').classList.add('scale-up');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.closest('.form-group').classList.remove('scale-up');
+            });
+        });
+        
+        // Переключение видимости пароля
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
+                
+                if (passwordInput) {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('bi-eye');
+                    icon.classList.toggle('bi-eye-slash');
+                }
+            });
+        });
+        
+        // Проверка совпадения паролей
+        const password1 = document.getElementById('password1');
+        const password2 = document.getElementById('password2');
+        
+        function checkPasswordMatch() {
+            if (password2.value && password1.value !== password2.value) {
+                password2.classList.add('is-invalid');
+                
+                // Добавляем сообщение об ошибке, если его еще нет
+                let feedback = document.querySelector('.password-match-feedback');
+                if (!feedback) {
+                    feedback = document.createElement('div');
+                    feedback.className = 'invalid-feedback password-match-feedback';
+                    feedback.textContent = 'Пароли не совпадают';
+                    password2.parentNode.appendChild(feedback);
+                }
+            } else {
+                password2.classList.remove('is-invalid');
+                const feedback = document.querySelector('.password-match-feedback');
+                if (feedback) {
+                    feedback.remove();
+                }
+            }
+        }
+        
+        if (password1 && password2) {
+            password1.addEventListener('input', checkPasswordMatch);
+            password2.addEventListener('input', checkPasswordMatch);
+        }
+    });
+</script>
+<style>
+    .scale-up {
+        transform: scale(1.02);
+        transition: transform 0.3s ease;
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .form-control, .input-group-text, .btn {
+        padding: 0.6rem 1rem;
+    }
+    
+    .toggle-password {
+        cursor: pointer;
+    }
+</style>
+{% endblock %}

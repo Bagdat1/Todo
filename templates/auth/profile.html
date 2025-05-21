@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Профиль | {{ profile.username }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                {% if profile.image %}
+                    <div style="width:150px; height:150px; overflow:hidden; border-radius:50%; margin:0 auto 1rem auto; display:flex; align-items:center; justify-content:center;">
+                        <img src="{{ profile.image.url }}" alt="{{ profile.username }}" style="object-fit:cover; width:100%; height:100%;">
+                    </div>
+                {% else %}
+                    <div class="img-profile-placeholder rounded-circle mb-3 mx-auto d-flex align-items-center justify-content:center" style="width: 150px; height: 150px; background-color: #6f42c1; color: white; font-size: 4rem;">
+                        {{ profile.username|slice:":1"|upper }}
+                    </div>
+                {% endif %}
+                <h3 class="mb-0">{{ profile.username }}</h3>
+                <p class="text-muted">{{ profile.email }}</p>
+                
+                {% if profile.bio %}
+                    <div class="bg-light p-3 rounded mb-3 text-start">
+                        <h6 class="mb-2"><i class="bi bi-person-vcard"></i> О себе</h6>
+                        <p class="mb-0">{{ profile.bio }}</p>
+                    </div>
+                {% endif %}
+                
+                <div class="text-muted mb-3">
+                    <small>
+                        <i class="bi bi-calendar3"></i> Зарегистрирован: {{ profile.date_joined|date:"d.m.Y" }}
+                    </small>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+                        <i class="bi bi-pencil-square me-1"></i>Редактировать профиль
+                    </a>
+                    <a href="{% url 'change_password' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-key me-1"></i>Изменить пароль
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Статистика задач</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="p-3 border rounded bg-light">
+                            <h2 class="mb-1">{{ profile.tasks.count }}</h2>
+                            <p class="text-muted mb-0">Всего задач</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="p-3 border rounded bg-light">
+                            <h2 class="mb-1">{{ completed_count }}</h2>
+                            <p class="text-muted mb-0">Выполнено</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded bg-light">
+                            <h2 class="mb-1">{{ uncompleted_count }}</h2>
+                            <p class="text-muted mb-0">В процессе</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>Последние задачи</h5>
+                <a href="{% url 'todo_list' %}" class="btn btn-sm btn-light">
+                    <i class="bi bi-eye me-1"></i>Показать все
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for task in profile.tasks.all|dictsortreversed:"created_at"|slice:":5" %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1 {% if task.completed %}text-decoration-line-through{% endif %}">
+                                        {{ task.title }}
+                                    </h6>
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i> {{ task.created_at|date:"d.m.Y" }}
+                                        <span class="badge {% if task.completed %}bg-success{% else %}bg-warning{% endif %} ms-2">
+                                            {{ task.completed|yesno:"Выполнено,В процессе" }}
+                                        </span>
+                                    </small>
+                                </div>
+                                <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="text-center p-4">
+                            <i class="bi bi-clipboard2 fs-1 text-muted"></i>
+                            <p class="mt-2 mb-0">У вас пока нет задач</p>
+                            <a href="{% url 'add_task' %}" class="btn btn-primary mt-3">
+                                <i class="bi bi-plus-lg me-1"></i>Создать задачу
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

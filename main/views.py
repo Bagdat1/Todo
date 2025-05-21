@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required 
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-
+from django.db.models import Count, Q
 
 from main.models import Task, CustomUser
 
@@ -70,7 +70,15 @@ def user_logout(request):
 @login_required(login_url='login')
 def user_profile(request):
     profile = request.user
-    return render(request, 'auth/profile.html', {'profile': profile})
+    completed_count = Task.objects.filter(user=profile, completed=True).count()
+    uncompleted_count = Task.objects.filter(user=profile, completed=False).count()
+    
+    context = {
+        'profile': profile,
+        'completed_count': completed_count,
+        'uncompleted_count': uncompleted_count
+    }
+    return render(request, 'auth/profile.html', context)
 
 
 @login_required(login_url='login')
