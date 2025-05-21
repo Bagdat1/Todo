@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo - Список задач</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="py-3 mb-4 border-bottom bg-white shadow-sm">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none">
+                <span class="fs-3 fw-bold text-primary">ToDo</span>
+            </a>
+        </div>
+    </header>
+    <div class="main-wrapper">
+        <div class="left-col">
+            <h1 class="mb-4">Список задач</h1>
+            <ul class="task-list">
+                {% for task in tasks %}
+                    <li class="task-item {% if task.completed %}completed{% endif %}">
+                        <div style="flex:1;min-width:0;">
+                            <h2>{{ task.title }}</h2>
+                            {% if task.description %}<p>{{ task.description }}</p>{% endif %}
+                            <p><span class="badge" style="background:rgba(255,255,255,0.18);color:#fff;">{{ task.completed|yesno:"Выполнено,Не выполнено" }}</span></p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <form method="post" action="{% url 'complete_task' task.id %}" style="display:inline; margin-right:10px;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-custom" style="background:#4caf50; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.95rem; margin-right:8px;">
+                                    {% if not task.completed %}Выполнено{% else %}Не выполнено{% endif %}
+                                </button>
+                            </form>
+                            <a href="{% url 'edit_task' task.id %}" title="Редактировать" style="margin-right:10px;color:#fff;opacity:0.7;">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19.5 3 21l1.5-4L16.5 3.5z"/></svg>
+                            </a>
+                            <form method="post" action="{% url 'delete_task' task.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-icon" title="Удалить" onclick="return confirm('Удалить задачу?');">
+                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                {% empty %}
+                    <p>Задач пока нет.</p>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="right-col">
+            <div class="form-section mb-3 add-section">
+                <h2 class="mb-3 fs-4">Добавить задачу</h2>
+                <form method="post" action="{% url 'add_task' %}">
+                    {% csrf_token %}
+                    <label>Название задачи:</label>
+                    <input type="text" name="title" required>
+                    <label>Описание:</label>
+                    <textarea name="description"></textarea>
+                    <button type="submit" class="btn-custom">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

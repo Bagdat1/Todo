@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактировать задачу</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="py-3 mb-4 border-bottom bg-white shadow-sm">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none">
+                <span class="fs-3 fw-bold text-primary">ToDo</span>
+            </a>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Редактировать задачу</h1>
+        <form method="post" class="add-section">
+            {% csrf_token %}
+            <label>Название задачи:</label>
+            <input type="text" name="title" value="{{ task.title }}" required>
+            <label>Описание:</label>
+            <textarea name="description">{{ task.description }}</textarea>
+            <div style="margin: 10px 0 18px 0;">
+                <input type="checkbox" name="completed" id="completedCheck" {% if task.completed %}checked{% endif %}>
+                <label for="completedCheck" style="font-weight:400;color:#6c47ff;display:inline;">Выполнено</label>
+            </div>
+            <button type="submit" class="btn-custom">Сохранить</button>
+            <a href="{% url 'todo_list' %}" class="btn-secondary" style="margin-left:12px;">Назад</a>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+/* Bootstrap 5 + кастомные стили для ToDo */
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+.container, .main-wrapper {
+    max-width: 400px;
+    margin: 40px auto 0 auto;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    position: static;
+}
+.main-wrapper {
+    display: block;
+    padding: 0;
+    gap: 0;
+}
+.left-col, .right-col {
+    min-width: 0;
+    padding: 0;
+}
+h1, h2 {
+    text-align: left;
+    color: #222;
+    font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+}
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px 0;
+}
+.task-item {
+    background: linear-gradient(90deg, #6c47ff 0%, #7c4dff 100%);
+    border: none;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    padding: 18px 16px 14px 16px;
+    box-shadow: none;
+    transition: background 0.2s, opacity 0.2s;
+    position: relative;
+    cursor: pointer;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.task-item.completed {
+    opacity: 0.5;
+    background: linear-gradient(90deg, #b39ddb 0%, #d1c4e9 100%);
+    color: #fff;
+    text-decoration: line-through;
+}
+.task-item h2, .task-item p, .task-item span {
+    color: #fff;
+    margin: 0;
+}
+.task-item h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.task-item p {
+    font-size: 0.95rem;
+}
+.btn-custom, .btn-danger {
+    display: inline-block;
+}
+.delete-icon {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+    margin-left: 12px;
+    transition: color 0.2s;
+}
+.delete-icon:hover {
+    color: #ff5252;
+}
+input[type="text"], textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 18px 0;
+    border: 1px solid #bdbdbd;
+    border-radius: 7px;
+    font-size: 1.05rem;
+    background: #fff;
+    transition: border 0.2s;
+    color: #222;
+}
+input[type="text"]:focus, textarea:focus {
+    border: 1.5px solid #6c47ff;
+    outline: none;
+    background: #f3f0ff;
+}
+label {
+    font-weight: 600;
+    color: #6c47ff;
+    margin-bottom: 4px;
+    display: block;
+}
+.form-section {
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    background: #e3f2fd;
+    border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+    background: #90caf9;
+    border-radius: 8px;
+}
+@media (max-width: 700px) {
+    .container, .main-wrapper {
+        max-width: 98vw;
+        padding: 0;
+    }
+}
+
+/* Стили для поиска и добавления */
+.search-section, .add-section {
+    margin-bottom: 32px;
+}
+.search-section input, .add-section input {
+    border: 1px solid #bbb;
+    border-radius: 7px;
+    background: #fff;
+    color: #222;
+    font-size: 1rem;
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 18px;
+}
+.search-section input:focus, .add-section input:focus {
+    border: 1.5px solid #6c47ff;
+    background: #f3f0ff;
+}
